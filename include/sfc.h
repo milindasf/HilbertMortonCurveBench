@@ -15,7 +15,7 @@ extern int G_dim;
 
 
 
-void rotate(int index,char* current,char * rot_index,int dim);
+void rotate(int index,char* current,char * rot_index,int dim,bool cal_true_index=true);
 //void rotate_table_based(int index,char* current,char * rot_index,int dim);
 
 #endif

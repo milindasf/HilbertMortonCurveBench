@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 
+
 extern char **HILBERT_2D_TABLE;
 extern char **HILBERT_3D_TABLE;
 
@@ -33,15 +34,15 @@ struct Rotation2D
   
   Rotation2D(char* p_rot_perm,char* p_rot_index)
   {
-    memcpy(rot_perm,p_rot_perm,sizeof(p_rot_perm));
-    memcpy(rot_index,p_rot_index,sizeof(p_rot_index));
+    memcpy(rot_perm,p_rot_perm,sizeof(char)*4);
+    memcpy(rot_index,p_rot_index,sizeof(char)*4);
   }
   
   
   Rotation2D& operator =(const Rotation2D& other)
   {
-    memcpy(this->rot_perm,other.rot_perm,sizeof(other.rot_perm));
-    memcpy(this->rot_index,other.rot_index,sizeof(other.rot_index));
+    memcpy(this->rot_perm,other.rot_perm,sizeof(char)*4);
+    memcpy(this->rot_index,other.rot_index,sizeof(char)*4);
     return *this;
   }
   
@@ -59,7 +60,7 @@ struct Rotation2D
   bool operator <(const Rotation2D & other) const
   {
     //return (std::string(this->rot_perm)<std::string(other.rot_perm));
-    return (this->rot_perm_str()<other.rot_perm_str());
+    return (rot_perm_str()<other.rot_perm_str());
     
     
   }
@@ -104,8 +105,8 @@ struct Rotation3D
   
   Rotation3D& operator =(const Rotation3D& other)
   {
-    memcpy(this->rot_perm,other.rot_perm,sizeof(other.rot_perm));
-    memcpy(this->rot_index,other.rot_index,sizeof(other.rot_index));
+    memcpy(this->rot_perm,other.rot_perm,sizeof(char)*8);
+    memcpy(this->rot_index,other.rot_index,sizeof(char)*8);
     return *this;
     
   }
@@ -209,9 +210,7 @@ void generateRotationPermutations(int dim,std::vector<T>& rotation_table)
       char rot_index[8]={0,1,2,3,4,5,6,7};
       
       T default_rotation(rot_current,rot_index);
-      
-      //std::cout<<"Default Rotation:"<<default_rotation.rot_perm[0]<<default_rotation.rot_perm[1]<<default_rotation.rot_perm[2]<<default_rotation.rot_perm[3]<<default_rotation.rot_perm[4]<<default_rotation.rot_perm[5]<<default_rotation.rot_perm[6]<<default_rotation.rot_perm[7]<<std::endl;
-      //std::cout<<"Default Rotation:"<<str<<std::endl;
+            
       insert_unique<T>(default_rotation,rotation_table,temp_rot);
       
       while(temp_rot.size()!=0)
@@ -227,8 +226,7 @@ void generateRotationPermutations(int dim,std::vector<T>& rotation_table)
 	  rotate(i,rot[i].rot_perm,rot[i].rot_index,3);
 	  insert_unique(rot[i],rotation_table,temp_rot);
 	}
-      
-	
+      	
       }
      
       std::sort(rotation_table.begin(),rotation_table.end());
@@ -237,6 +235,6 @@ void generateRotationPermutations(int dim,std::vector<T>& rotation_table)
 
 void initializeHilbetTable(int dim);
 
-void rotate_table_based(int index,char* current,char * rot_index,int dim);
+void rotate_table_based(int index,int& current_rot,int dim);
 
 #endif

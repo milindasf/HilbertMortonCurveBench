@@ -3,12 +3,14 @@
 int G_MAX_DEPTH=0;
 int G_dim=0;
 
-void rotate(int index,char* current,char * rot_index,int dim)
+void rotate(int index,char* current,char * rot_index,int dim,bool cal_true_index)
 {
   
   if(dim==2)
   {
-    index=rot_index[index];
+    if(cal_true_index){
+      index=rot_index[index];
+    }
      if(index==0)
     {
       rot_index[current[1]]=3;
@@ -26,8 +28,9 @@ void rotate(int index,char* current,char * rot_index,int dim)
     
   }else if(dim==3)
   {	
-    
-    index=rot_index[index];
+    if(cal_true_index){
+      index=rot_index[index];
+    }
     if(index==0)
     {
       rot_index[current[1]]=7;

@@ -24,7 +24,7 @@ Name=HilbertMortonSFCBench
 Type=Native Application
 
 [Launch][Launch Configuration 0][Data]
-Arguments=3 10000 10 3
+Arguments=2 10000 10 5
 Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x00)
 Dependency Action=Nothing
 EnvironmentGroup=default
@@ -34,6 +34,9 @@ Project Target=HilbertCurveBench,hilbertcurvebench
 Use External Terminal=false
 Working Directory=
 isExecutable=false
+
+[Project]
+VersionControlSupport=kdevgit
 
 [SourceFileTemplates]
 LastUsedTemplate=/home/milinda/.kde/share/apps/kdevfiletemplates/template_descriptions/cpp_basic.desktop

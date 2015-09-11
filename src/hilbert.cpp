@@ -452,15 +452,17 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
   unsigned int index1=0;
   unsigned int index2=0;
   
+  //Rotation2D temp_2d;
+  //Rotation3D temp_3d;
+  int index_temp=0;
   
   if(G_dim==2)
   {
      char rotation[4]={0,1,2,3};
      char rot_index[4]={0,1,2,3};
-       
-   
-	 while ((xl!=ncaX || yl!=ncaY || zl!=ncaZ || count!=ncaLev ))
-	  {
+     int current_rot=0;
+      while ((xl!=ncaX || yl!=ncaY || zl!=ncaZ || count!=ncaLev ))
+      {
 	    len=len>>1;
 	  
 	    index1 = 0;
@@ -471,45 +473,51 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
 	    }
 	    if ( ncaY >= (len + yl) ) { index1 += 1; yl += len; }
 	  
-	  rotate(index1,rotation,rot_index,dim);
+	  //rotate(index1,rotation,rot_index,dim);
 	  
-
+	  //rotate_table_based(index1,current_rot,dim);
+	  //temp_2d=rotations_2d[current_rot];
+	  index_temp=rotations_2d[current_rot].rot_index[index1];
+	  current_rot=HILBERT_2D_TABLE[current_rot][index_temp];
 	  count++;
 	  
       }
       
       len=len>>1;
+      //Rotation2D temp=Rotation2D(rotation,rot_index);
+      Rotation2D temp=rotations_2d[current_rot];
+      
       if((x1-ncaX)<len && (y1-ncaY)<len)
       { // index 0
-        index1= rot_index[0];
+        index1= temp.rot_index[0];
 
       }else if((x1-ncaX)<len && (y1-ncaY)>=len)
       { // index 1
-	index1=rot_index[1];
+	index1=temp.rot_index[1];
       }else if((x1-ncaX)>=len && (y1-ncaY)>=len)
       { // index 2
-	index1=rot_index[2];
+	index1=temp.rot_index[2];
       }else if ((x1-ncaX)>=len && (y1-ncaY)<len)
       { // index 3
-	index1=rot_index[3];
+	index1=temp.rot_index[3];
 	
       }
       
       
       if((x2-ncaX)<len && (y2-ncaY)<len)
       { // index 0
-	index2=rot_index[0];
+	index2=temp.rot_index[0];
 	
       }else if((x2-ncaX)<len && (y2-ncaY)>=len)
       { // index 1
-	index2=rot_index[1];
+	index2=temp.rot_index[1];
 	
       }else if((x2-ncaX)>=len && (y2-ncaY)>=len)
       { // index 2
-	index2=rot_index[2];
+	index2=temp.rot_index[2];
       }else if ((x2-ncaX)>=len && (y2-ncaY)<len)
       { // index 3
-	index2=rot_index[3];
+	index2=temp.rot_index[3];
 	
       }
     
@@ -519,8 +527,7 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
   {
       char rotation[8]={0,1,2,3,4,5,6,7}; // Initial rotation
       char rot_index[8]={0,1,2,3,4,5,6,7}; // Initial rotation indices 
-      
-      //std::cout<<"Rotation:"<<rotation[0]<<rotation[1]<<rotation[2]<<rotation[3]<<rotation[4]<<rotation[5]<<rotation[6]<<rotation[7]<<std::endl;
+      int current_rot=0;
       while ((xl!=ncaX || yl!=ncaY || zl!=ncaZ || count!=ncaLev ) /*&& len >0*/)
       {
 
@@ -556,65 +563,71 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
       }
       
       //rotate(index1,rotation,rot_index,dim);
-      rotate_table_based(index1,rotation,rot_index,dim);
-      //std::cout<<"Rotation:"<<rotation[0]<<rotation[1]<<rotation[2]<<rotation[3]<<rotation[4]<<rotation[5]<<rotation[6]<<rotation[7]<<std::endl;
+      //rotate_table_based(index1,current_rot,dim);
+      
+      //temp_3d=rotations_3d[current_rot];
+      index_temp=rotations_3d[current_rot].rot_index[index1];
+      current_rot=HILBERT_3D_TABLE[current_rot][index_temp];
+      
       count++;
 	
       }
-            
+      Rotation3D temp=rotations_3d[current_rot];      
+      //Rotation3D temp=Rotation3D(rotation,rot_index);
+      
       len >>=1;
         
        if((x1-ncaX)<len && (y1-ncaY)<len && (z1-ncaZ)<len)
 	{ 
-	  index1=rot_index[0];
+	  index1=temp.rot_index[0];
 	}else if ((x1-ncaX)<len && (y1-ncaY)>=len && (z1-ncaZ)<len)
 	{ 
-	  index1=rot_index[1]; 
+	  index1=temp.rot_index[1]; 
 	}else if((x1-ncaX)>=len && (y1-ncaY)>=len && (z1-ncaZ)<len)
 	{
-	  index1=rot_index[2];
+	  index1=temp.rot_index[2];
 	}else if((x1-ncaX)>=len && (y1-ncaY)<len && (z1-ncaZ)<len)
 	{ 
-	  index1=rot_index[3];
+	  index1=temp.rot_index[3];
 	}else if ((x1-ncaX)>=len && (y1-ncaY)<len && (z1-ncaZ)>=len)
 	{
-	  index1=rot_index[4];
+	  index1=temp.rot_index[4];
 	}else if((x1-ncaX)>=len && (y1-ncaY)>=len && (z1-ncaZ)>=len)
 	{ 
-	  index1=rot_index[5];
+	  index1=temp.rot_index[5];
 	}else if((x1-ncaX)<len && (y1-ncaY)>=len && (z1-ncaZ)>=len)
 	{ 
-	  index1=rot_index[6];
+	  index1=temp.rot_index[6];
 	}else if((x1-ncaX)<len && (y1-ncaY)<len && (z1-ncaZ)>=len)
 	{
-	  index1=rot_index[7];
+	  index1=temp.rot_index[7];
 	}
 	
 	
 	if((x2-ncaX)<len && (y2-ncaY)<len && (z2-ncaZ)<len)
 	{ 
-	  index2=rot_index[0];
+	  index2=temp.rot_index[0];
 	}else if ((x2-ncaX)<len && (y2-ncaY)>=len && (z2-ncaZ)<len)
 	{ 
-	  index2=rot_index[1];
+	  index2=temp.rot_index[1];
 	}else if((x2-ncaX)>=len && (y2-ncaY)>=len && (z2-ncaZ)<len)
 	{
-	  index2=rot_index[2];
+	  index2=temp.rot_index[2];
 	}else if((x2-ncaX)>=len && (y2-ncaY)<len && (z2-ncaZ)<len)
 	{
-	  index2=rot_index[3];
+	  index2=temp.rot_index[3];
 	}else if ((x2-ncaX)>=len && (y2-ncaY)<len && (z2-ncaZ)>=len)
 	{
-	  index2=rot_index[4];
+	  index2=temp.rot_index[4];
 	}else if((x2-ncaX)>=len && (y2-ncaY)>=len && (z2-ncaZ)>=len)
 	{ 
-	  index2=rot_index[5];
+	  index2=temp.rot_index[5];
 	}else if((x2-ncaX)<len && (y2-ncaY)>=len && (z2-ncaZ)>=len)
 	{ 
-	  index2=rot_index[6];
+	  index2=temp.rot_index[6];
 	}else if((x2-ncaX)<len && (y2-ncaY)<len && (z2-ncaZ)>=len)
 	{
-	  index2=rot_index[7];
+	  index2=temp.rot_index[7];
 	}
 	
 	
