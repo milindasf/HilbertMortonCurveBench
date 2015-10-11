@@ -1,29 +1,13 @@
 /*
- * Copyright (c) 2015 <copyright holder> <email>
- * 
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ *@author: Milinda Fernando
+ *@date: 09/04/2015 // This is refactored code from HilbertBenchmark code.
+ *School of Computing, University of Utah
+ *
+ *Compare the performance of differernt SFC implemnetations. 
+ *Currently supports for HILBERT and MORTON Curves.  
+ *
  * 
  */
-
 #ifndef BENCHMARK_H
 #define BENCHMARK_H
 
@@ -44,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
-
+#include <sstream>
 
 
 
@@ -91,6 +75,9 @@ public:
   
   void output_points();
   void output_to_csv(std::string file_name);
+  void output_to_vtk(std::string file_name);
+
+  bool pairwise_ordering_check(std::vector<Point>& nodes,int ordering_type);
 
   void run_bench();
   

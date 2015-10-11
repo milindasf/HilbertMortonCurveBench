@@ -6,7 +6,9 @@
 #include "sfc.h"
 #include "point.h"
 #include "dendro.h"
-#include "rotation.h"
+#include "hcurvedata.h"
+
+//#include "rotation.h"
 
 bool hilbert_order_NCA(const Point& p1,const Point& p2) ;
 bool hilbert_order(const Point& p1,const Point& p2) ;

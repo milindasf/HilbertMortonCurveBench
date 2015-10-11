@@ -1,3 +1,15 @@
+/*
+ *@author: Milinda Fernando
+ *@date: 09/04/2015 // This is refactored code from HilbertBenchmark code.
+ *School of Computing, University of Utah
+ * 
+ * Contains the code to gernerate the Hilbert Table
+ * Later we can hardcorde the table to the dendro header file. 
+ * 
+ *//*
+
+
+
 #ifndef ROTATION_H
 #define ROTATION_H
 
@@ -7,16 +19,17 @@
 #include <algorithm>
 
 
-extern char **HILBERT_2D_TABLE;
-extern char **HILBERT_3D_TABLE;
+ char *HILBERT_TABLE;
 
 
 
+*/
 /*
  *
  * Rotations for 2D and 3D case. 
  *
- */
+ *//*
+
 
 struct Rotation2D
 {
@@ -146,8 +159,8 @@ struct Rotation3D
   
 };
 
-extern std::vector<Rotation2D> rotations_2d;
-extern std::vector<Rotation3D> rotations_3d;
+//extern std::vector<Rotation2D> rotations_2d;
+//std::vector<Rotation3D> rotations;
 
 template<typename T>
 void insert_unique(T& item,std::vector<T>& unique_rot_patterns,std::vector<T>& rot_patterns)
@@ -158,10 +171,10 @@ void insert_unique(T& item,std::vector<T>& unique_rot_patterns,std::vector<T>& r
       return;
     }
   }
-  
+
   rot_patterns.push_back(item);
   unique_rot_patterns.push_back(item);
- 
+
 }
 
 template <typename T>
@@ -173,62 +186,62 @@ void generateRotationPermutations(int dim,std::vector<T>& rotation_table)
   {
      int rot_count=0;
      T rot[4];
-     char rot_current[4]={0,1,2,3};
-     char rot_index[4]={0,1,2,3};
-     
+     char rot_current[8]={0,1,2,3,0,0,0,0};
+     char rot_index[8]={0,1,2,3,0,0,0,0};
+
      T default_rotation(rot_current,rot_index);
      //Rotation2D current_rot;
      insert_unique<T>(default_rotation,rotation_table,temp_rot);
-       
+
       while(temp_rot.size()!=0)
       {
-	
+
 	T rotation=temp_rot[0];
 	temp_rot.erase(temp_rot.begin());
-			
+
 	for(int i=0;i<4;i++){
-	  
+
 	  rot[i]=rotation;//T(rotation.rot_perm,rotation.rot_index);
-	  
+
 	  rotate(i,rot[i].rot_perm,rot[i].rot_index,2);
 	  insert_unique(rot[i],rotation_table,temp_rot);
 	}
-      
-	
+
+
       }
       std::sort(rotation_table.begin(),rotation_table.end());
-     
+
   }else if(dim==3)
   {
       //default rotation pattern inserted.
-      
-      
+
+
       int rot_count=0;
       T rot[8];
-      
+
       char rot_current[8]={0,1,2,3,4,5,6,7};
       char rot_index[8]={0,1,2,3,4,5,6,7};
-      
+
       T default_rotation(rot_current,rot_index);
-            
+
       insert_unique<T>(default_rotation,rotation_table,temp_rot);
-      
+
       while(temp_rot.size()!=0)
       {
-	
+
 	T rotation=temp_rot[0];
 	temp_rot.erase(temp_rot.begin());
-	
+
 	for(int i=0;i<8;i++){
-	
+
 	  rot[i]=rotation;//(rotation.rot_perm,rotation.rot_index);
-	  
+
 	  rotate(i,rot[i].rot_perm,rot[i].rot_index,3);
 	  insert_unique(rot[i],rotation_table,temp_rot);
 	}
-      	
+
       }
-     
+
       std::sort(rotation_table.begin(),rotation_table.end());
   }
 }
@@ -237,4 +250,4 @@ void initializeHilbetTable(int dim);
 
 void rotate_table_based(int index,int& current_rot,int dim);
 
-#endif
+#endif*/

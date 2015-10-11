@@ -1,29 +1,13 @@
 /*
- * Copyright (c) 2015 <copyright holder> <email>
- * 
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- * 
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ *@author: Milinda Fernando
+ *@date: 09/04/2015 // This is refactored code from HilbertBenchmark code.
+ *School of Computing, University of Utah
+ *
+ *Compare the performance of differernt SFC implemnetations. 
+ *Currently supports for HILBERT and MORTON Curves.  
+ *
  * 
  */
-
 #include "../include/benchmark.h"
 
 
@@ -140,6 +124,34 @@ void Benchmark::output_to_csv(std::string file_name)
   
 }
 
+void Benchmark::output_to_vtk(std::string file_name)
+{
+  std::ofstream myfile;
+  std::ostringstream convert;
+  convert<<file_name<<"_"<<max_depth<<"_"<<num_pts<<".vtk";
+  std::string filename=convert.str();//file_name+"_"+std::itoa(dim)+"_"+std::string(num_pts)+".vtk";
+  std::cout<<filename<<std::endl;
+  myfile.open(filename.c_str());
+  myfile<<"# vtk DataFile Version 2.0"<<std::endl;
+  myfile<<"HILBERT ORDERING"<<std::endl;
+  myfile<<"ASCII"<<std::endl;
+  myfile<<"DATASET POLYDATA"<<std::endl;
+  myfile<<"POINTS "<<point_vec.size()<<" float"<<std::endl;
+  for(int i=0;i<point_vec.size();i++)
+  {  
+    myfile <<point_vec[i].x()<<" "<<point_vec[i].y()<<" "<<point_vec[i].z()<<std::endl;
+  }
+  myfile<<"LINES 1 "<<(point_vec.size()+1)<<std::endl;
+  myfile<<point_vec.size()<<" ";
+  for(int i=0;i<point_vec.size();i++)
+  {
+    myfile<<(i+1)<<" ";
+  }
+  myfile.close();
+}
+
+
+
 double Benchmark::getMean(std::vector< int > v)
 {
   int sum;
@@ -173,6 +185,30 @@ bool Benchmark::compare_vec(std::vector< Point > v, std::vector< Point > u)
   
 }
 
+
+bool Benchmark::pairwise_ordering_check(std::vector<Point>& nodes,int ordering_type)
+{
+
+  this->order_points(ordering_type);
+  for(int i=0;i<nodes.size()-1;i++)
+  {
+    for(int j=i+1;j<nodes.size();j++){
+      if(ordering_type==HILBERT_NCA)
+      {
+        if(!hilbert_order_NCA(nodes[i],nodes[j]) && nodes[i]!=nodes[j])
+        {
+          //std::cout<<"node: "<<i<<" "<<nodes[i];//<<"\t"<<nodes[i].yint()<<"\t"<<nodes[i].zint()<<"\t"<<"node: "<<j<<" "<<nodes[j].xint()<<"\t"<<nodes[j].yint()<<"\t"<<nodes[j].zint()<<std::end;
+          std::cout<<i<<" "<<j<<endl;
+          return false;
+        }
+      }
+    }
+
+  }
+  return true;
+
+
+}
 
 void Benchmark::run_bench()
 {
@@ -214,8 +250,9 @@ void Benchmark::run_bench()
     runtime_hilbert_NCA.push_back(duration_hilbert_nca.count());
     std::cout<<"duration_hilbert_NCA:"<<duration_hilbert_nca.count()<<std::endl;
     
+    
     std::vector<Point> h_nca=point_vec;
-    this->output_to_csv("hilbert_nca");
+    output_to_vtk("hilbert_nca");
     
     auto start_morton_nca=std::chrono::system_clock::now();
     this->order_points(MORTON_NCA);
@@ -238,8 +275,11 @@ void Benchmark::run_bench()
     {
       std::cout<<"Interation i:"<<i<<" ordered points mismatched"<<std::endl;
     }
-    
-    
+
+
+
+    bool state=this->pairwise_ordering_check(point_vec,HILBERT_NCA);
+    std::cout<<"Pairwise Testing:"<<state<<std::endl;
   }
   
   

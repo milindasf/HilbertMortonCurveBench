@@ -1,44 +1,57 @@
+/*
+ *@author: Milinda Fernando
+ *@date: 09/04/2015 // This is refactored code from HilbertBenchmark code.
+ *School of Computing, University of Utah
+ * 
+ * Contains the code to gernerate the Hilbert Table
+ * Later we can hardcorde the table to the dendro header file. 
+ * 
+ *//*
+
+
 #include "../include/rotation.h"
 
-std::vector<Rotation3D> rotations_3d;
-std::vector<Rotation2D> rotations_2d;
-char **HILBERT_2D_TABLE;
-char **HILBERT_3D_TABLE;
+std::vector<Rotation3D> rotations;
+//std::vector<Rotation2D> rotations_2d;
+
+
+//char * HILBERT_TABLE;
+
 
 void initializeHilbetTable(int dim)
 {
   unsigned int num_children=1<<dim;
-  
+
   if(dim==2)
   {
-    
-    HILBERT_2D_TABLE=new char*[4];
-    
-    for(int i=0;i<4;i++){
-      HILBERT_2D_TABLE[i]=new char[4];
-    }
-    // NOTE: Assuming the rotations vector is sorted. 
-    generateRotationPermutations<Rotation2D>(dim,rotations_2d);
-    Rotation2D temp;
-    
-//     for(int i=0;i<rotations_2d.size();i++){
-//       std::cout<<"Rotation:"<<rotations_2d[i].rot_perm_str()<<"\t Rot_Index:"<<rotations_2d[i].rot_index_str()<<std::endl;
-//     }
 
-    for(int i=0;i<rotations_2d.size();i++)
+    // NOTE: Assuming the rotations vector is sorted.
+    generateRotationPermutations<Rotation3D>(dim,rotations);
+    Rotation3D temp;
+
+    HILBERT_TABLE=new char[rotations.size()*num_children];
+
+
+     for(int i=0;i<rotations.size();i++){
+       //std::cout<<"Rotation:"<<rotations_2d[i].rot_perm_str()<<"\t Rot_Index:"<<rotations_2d[i].rot_index_str()<<std::endl;
+		 std::printf("strcpy(rotations+%d,\"%d%d%d%d%d%d%d%d\");\n",i*8,rotations[i].rot_perm[0],rotations[i].rot_perm[1],rotations[i].rot_perm[2],rotations[i].rot_perm[3],
+					 rotations[i].rot_index[0],rotations[i].rot_index[1],rotations[i].rot_index[2],rotations[i].rot_index[3]);
+	 }
+
+    for(int i=0;i<rotations.size();i++)
     {
-      
+
       for(int j=0;j<num_children;j++)
       {
-	temp=rotations_2d[i];
+	temp=rotations[i];
 	rotate(j,temp.rot_perm,temp.rot_index,dim,false);
-	
+
 	bool found=false;
 	int index=0;
-	
-	for(int w=0;w<rotations_2d.size();w++)
+
+	for(int w=0;w<rotations.size();w++)
 	{
-	  if(rotations_2d[w]==temp){
+	  if(rotations[w]==temp){
 	    found=true;
 	    index=w;
 	    break;
@@ -49,42 +62,40 @@ void initializeHilbetTable(int dim)
 	  std::cout<<"Rotation Permutations Error. Found a rotations permutation which is not in the list"<<std::endl;
 	}else
 	{
-	  
-	  HILBERT_2D_TABLE[i][j]=index;
-	  //std::cout<<"HILBERT_2D_TABLE["<<i<<"]"<<"["<<j<<"]="<<(int)HILBERT_2D_TABLE[i][j]<<";"<<std::endl;
+
+	  HILBERT_TABLE[i*num_children+j]=index;
+	  std::cout<<"HILBERT_TABLE["<<(i*num_children+j)<<"]="<<(int)HILBERT_TABLE[i*num_children+j]<<";"<<std::endl;
 	}
       }
     }
-    
+
   }else if(dim==3)
   {
-    
-    // NOTE: Assuming the rotations vector is sorted. 
-    generateRotationPermutations<Rotation3D>(dim,rotations_3d);
-//     for(int i=0;i<rotations_3d.size();i++){
-//       std::cout<<"Rotation:"<<rotations_3d[i].rot_perm_str()<<"\t Rotation_index:"<<rotations_3d[i].rot_index_str()<<std::endl;
-//     }
-  
-    HILBERT_3D_TABLE=new char*[24];
-    
-    for(int i=0;i<24;i++){
-      HILBERT_3D_TABLE[i]=new char[8];
-    }
-    
+
+    // NOTE: Assuming the rotations vector is sorted.
+    generateRotationPermutations<Rotation3D>(dim,rotations);
+     for(int i=0;i<rotations.size();i++){
+//       //std::cout<<"Rotation:"<<rotations_3d[i].rot_perm_str()<<"\t Rotation_index:"<<rotations_3d[i].rot_index_str()<<std::endl;
+		 std::printf("strcpy(rotations+%d,\"%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d%d\");\n",i*16,rotations[i].rot_perm[0],rotations[i].rot_perm[1],rotations[i].rot_perm[2],rotations[i].rot_perm[3],rotations[i].rot_perm[4],rotations[i].rot_perm[5],rotations[i].rot_perm[6],rotations[i].rot_perm[7]
+				 ,rotations[i].rot_index[0],rotations[i].rot_index[1],rotations[i].rot_index[2],rotations[i].rot_index[3],rotations[i].rot_index[4],rotations[i].rot_index[5],rotations[i].rot_index[6],rotations[i].rot_index[7]);
+     }
+
+
+    HILBERT_TABLE=new char[rotations.size()*num_children];
     Rotation3D temp;
-    
-    for(int i=0;i<rotations_3d.size();i++)
+
+    for(int i=0;i<rotations.size();i++)
     {
-     
+
       for(int j=0;j<num_children;j++)
-      { 
-	temp=rotations_3d[i];
+      {
+	temp=rotations[i];
 	rotate(j,temp.rot_perm,temp.rot_index,dim,false);
 	bool found=false;
 	int index=0;
-	for(int w=0;w<rotations_3d.size();w++)
+	for(int w=0;w<rotations.size();w++)
 	{
-	  if(rotations_3d[w]==temp){
+	  if(rotations[w]==temp){
 	    found=true;
 	    index=w;
 	    break;
@@ -95,17 +106,17 @@ void initializeHilbetTable(int dim)
 	  std::cout<<"Rotation Permutations Error. Found a rotations permutation which is not in the list"<<std::endl;
 	}else
 	{
-	  HILBERT_3D_TABLE[i][j]=index;
-	  //std::cout<<"HILBERT_3D_TABLE["<<i<<"]"<<"["<<j<<"]="<<index<<";"<<std::endl;
+	  HILBERT_TABLE[i*num_children+j]=index;
+	  std::cout<<"HILBERT_TABLE["<<(i*num_children+j)<<"]="<<(int)HILBERT_TABLE[i*num_children+j]<<";"<<std::endl;
 	}
-	
+
       }
     }
   }
-  
-  
-  
-  
+
+
+
+
 }
 
 
@@ -114,18 +125,19 @@ void rotate_table_based(int index,int& current_rot,int dim)
   int index_temp=0;
   if(dim==2)
   {
-    
-     Rotation2D temp=rotations_2d[current_rot];
+
+     Rotation3D temp=rotations[current_rot];
       index_temp=temp.rot_index[index];
-     current_rot=HILBERT_2D_TABLE[current_rot][index_temp];
+     current_rot=HILBERT_TABLE[current_rot*4+index_temp];
   }else if(dim==3)
   {
 
-      Rotation3D temp=rotations_3d[current_rot];
+      Rotation3D temp=rotations[current_rot];
       index_temp=temp.rot_index[index];
-      current_rot=HILBERT_3D_TABLE[current_rot][index_temp];
-  
+      current_rot=HILBERT_TABLE[current_rot*8+index_temp];
+
   }
-  
-  
+
+
 }
+*/
