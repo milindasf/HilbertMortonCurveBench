@@ -278,8 +278,8 @@ void Benchmark::run_bench()
 
 
 
-    bool state=this->pairwise_ordering_check(point_vec,HILBERT_NCA);
-    std::cout<<"Pairwise Testing:"<<state<<std::endl;
+    //bool state=this->pairwise_ordering_check(point_vec,HILBERT_NCA);
+    //std::cout<<"Pairwise Testing:"<<state<<std::endl;
   }
   
   

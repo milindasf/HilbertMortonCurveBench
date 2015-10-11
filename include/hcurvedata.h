@@ -35,7 +35,7 @@ const int _3D_ROTATIONS_SIZE=384;
 extern char* HILBERT_TABLE;
 extern char* rotations;
 
-//#define DENDRO_DIM2
+#define DENDRO_DIM2
 
 void _InitializeHcurve();
 
