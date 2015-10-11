@@ -12,9 +12,9 @@ int main(int argc, char **argv) {
     int arg_num_pts=atoi(argv[2]);
     int arg_max_depth=atoi(argv[3]);
     int arg_iter=atoi(argv[4]);   
-    initializeHilbetTable(2);
+    //initializeHilbetTable(2);
     initializeHilbetTable(3);
-    
+    std::cout<<"Iniitlization finished:"<<std::endl;
     
     bench=new Benchmark(arg_max_depth,arg_dim,arg_num_pts,arg_iter);
     bench->run_bench();

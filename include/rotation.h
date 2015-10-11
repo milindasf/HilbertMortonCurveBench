@@ -7,8 +7,8 @@
 #include <algorithm>
 
 
-extern char **HILBERT_2D_TABLE;
-extern char **HILBERT_3D_TABLE;
+//extern char **HILBERT_2D_TABLE;
+extern char *HILBERT_TABLE;
 
 
 

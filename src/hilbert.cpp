@@ -477,8 +477,9 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
 	  
 	  //rotate_table_based(index1,current_rot,dim);
 	  //temp_2d=rotations_2d[current_rot];
-	  index_temp=rotations_2d[current_rot].rot_index[index1];
-	  current_rot=HILBERT_2D_TABLE[current_rot][index_temp];
+	  //index_temp=rotations_2d[current_rot].rot_index[index1];
+        //index_temp=index1;
+        current_rot=HILBERT_TABLE[current_rot*4+index1];
 	  count++;
 	  
       }
@@ -566,8 +567,8 @@ bool hilbert_order_NCA(const Point& p1,const Point& p2)
       //rotate_table_based(index1,current_rot,dim);
       
       //temp_3d=rotations_3d[current_rot];
-      index_temp=rotations_3d[current_rot].rot_index[index1];
-      current_rot=HILBERT_3D_TABLE[current_rot][index_temp];
+      index_temp=index1;//rotations_3d[current_rot].rot_index[index1];
+      current_rot=HILBERT_TABLE[current_rot*8+index_temp];
       
       count++;
 	

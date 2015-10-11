@@ -2,8 +2,8 @@
 
 std::vector<Rotation3D> rotations_3d;
 std::vector<Rotation2D> rotations_2d;
-char **HILBERT_2D_TABLE;
-char **HILBERT_3D_TABLE;
+//char **HILBERT_2D_TABLE;
+char *HILBERT_TABLE;
 
 void initializeHilbetTable(int dim)
 {
@@ -12,11 +12,11 @@ void initializeHilbetTable(int dim)
   if(dim==2)
   {
     
-    HILBERT_2D_TABLE=new char*[4];
+    HILBERT_TABLE=new char[4*4];
     
-    for(int i=0;i<4;i++){
-      HILBERT_2D_TABLE[i]=new char[4];
-    }
+//    for(int i=0;i<4;i++){
+//      HILBERT_2D_TABLE[i]=new char[4];
+//    }
     // NOTE: Assuming the rotations vector is sorted. 
     generateRotationPermutations<Rotation2D>(dim,rotations_2d);
     Rotation2D temp;
@@ -31,7 +31,7 @@ void initializeHilbetTable(int dim)
       for(int j=0;j<num_children;j++)
       {
 	temp=rotations_2d[i];
-	rotate(j,temp.rot_perm,temp.rot_index,dim,false);
+	rotate(j,temp.rot_perm,temp.rot_index,dim,true);
 	
 	bool found=false;
 	int index=0;
@@ -50,8 +50,9 @@ void initializeHilbetTable(int dim)
 	}else
 	{
 	  
-	  HILBERT_2D_TABLE[i][j]=index;
-	  //std::cout<<"HILBERT_2D_TABLE["<<i<<"]"<<"["<<j<<"]="<<(int)HILBERT_2D_TABLE[i][j]<<";"<<std::endl;
+	  HILBERT_TABLE[i*4+j]=index;
+	  //std::cout<<"HILBERT_2D_TABLE["<<i<<"]"<<"["<<j<<"]="<<(int)index<<";"<<std::endl;
+      std::cout<<"HILBERT_TABLE["<<(i*4+j)<<"]="<<(int)index<<";"<<std::endl;
 	}
       }
     }
@@ -65,21 +66,22 @@ void initializeHilbetTable(int dim)
 //       std::cout<<"Rotation:"<<rotations_3d[i].rot_perm_str()<<"\t Rotation_index:"<<rotations_3d[i].rot_index_str()<<std::endl;
 //     }
   
-    HILBERT_3D_TABLE=new char*[24];
+    HILBERT_TABLE=new char[24*8];
     
-    for(int i=0;i<24;i++){
-      HILBERT_3D_TABLE[i]=new char[8];
-    }
+//    for(int i=0;i<24;i++){
+//      HILBERT_3D_TABLE[i]=new char[8];
+//    }
     
     Rotation3D temp;
-    
+    int child_index;
     for(int i=0;i<rotations_3d.size();i++)
     {
      
       for(int j=0;j<num_children;j++)
       { 
 	temp=rotations_3d[i];
-	rotate(j,temp.rot_perm,temp.rot_index,dim,false);
+    child_index=temp.rot_index[j];
+	rotate(j,temp.rot_perm,temp.rot_index,dim, true);
 	bool found=false;
 	int index=0;
 	for(int w=0;w<rotations_3d.size();w++)
@@ -93,10 +95,12 @@ void initializeHilbetTable(int dim)
 	if(found==false)
 	{
 	  std::cout<<"Rotation Permutations Error. Found a rotations permutation which is not in the list"<<std::endl;
+      exit(0);
 	}else
 	{
-	  HILBERT_3D_TABLE[i][j]=index;
-	  //std::cout<<"HILBERT_3D_TABLE["<<i<<"]"<<"["<<j<<"]="<<index<<";"<<std::endl;
+	  HILBERT_TABLE[i*8+j]=index;
+//	  std::cout<<"HILBERT_3D_TABLE["<<i<<"]"<<"["<<j<<"]="<<index<<";"<<std::endl;
+      std::cout<<"HILBERT_TABLE["<<(i*8+j)<<"]="<<(int)index<<";"<<std::endl;
 	}
 	
       }
@@ -117,13 +121,13 @@ void rotate_table_based(int index,int& current_rot,int dim)
     
      Rotation2D temp=rotations_2d[current_rot];
       index_temp=temp.rot_index[index];
-     current_rot=HILBERT_2D_TABLE[current_rot][index_temp];
+     current_rot=HILBERT_TABLE[current_rot*4+index_temp];
   }else if(dim==3)
   {
 
       Rotation3D temp=rotations_3d[current_rot];
       index_temp=temp.rot_index[index];
-      current_rot=HILBERT_3D_TABLE[current_rot][index_temp];
+      current_rot=HILBERT_TABLE[current_rot*24+index_temp];
   
   }
   
